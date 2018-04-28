@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>calc</Name>
+    <Assembly>CalcTest.dll</Assembly>
+    <AddInId>5457437a-7694-4b62-a323-a39c65d90b15</AddInId>
+    <FullClassName>CalcTest.Tab</FullClassName>
+    <VendorId>LST</VendorId>
+    <VendorDescription>Why so serious</VendorDescription>
+  </AddIn>
+</RevitAddIns>

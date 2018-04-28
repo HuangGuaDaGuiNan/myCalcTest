@@ -1,0 +1,9 @@
+c:\users\administrator\documents\visual studio 2017\Projects\CalcTest\CalcTest\bin\Debug\CalcTest.dll
+c:\users\administrator\documents\visual studio 2017\Projects\CalcTest\CalcTest\bin\Debug\CalcTest.pdb
+c:\users\administrator\documents\visual studio 2017\Projects\CalcTest\CalcTest\bin\Debug\EPPlus.dll
+c:\users\administrator\documents\visual studio 2017\Projects\CalcTest\CalcTest\bin\Debug\EPPlus.xml
+c:\users\administrator\documents\visual studio 2017\Projects\CalcTest\CalcTest\obj\Debug\CalcTest.csprojResolveAssemblyReference.cache
+c:\users\administrator\documents\visual studio 2017\Projects\CalcTest\CalcTest\obj\Debug\CalcTest.dll
+c:\users\administrator\documents\visual studio 2017\Projects\CalcTest\CalcTest\obj\Debug\CalcTest.pdb
+C:\Users\Administrator\documents\visual studio 2017\Projects\CalcTest\CalcTest\obj\Debug\Interop.Office.dll
+C:\Users\Administrator\documents\visual studio 2017\Projects\CalcTest\CalcTest\obj\Debug\CalcTest.csproj.ResolveComReference.cache
