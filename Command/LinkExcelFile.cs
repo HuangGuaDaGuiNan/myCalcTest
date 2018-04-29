@@ -15,8 +15,8 @@ namespace CalcTest.Command
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             //Excel名称及路径
-            string fileName = "pipeCalc";
-            string filePath = @"C:\Users\Administrator\Desktop\test\" + fileName + ".xlsx";
+            string fullName = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\test\PlumbingCalc.xlsx";
+            //string filePath = @"C:\Users\Administrator\Desktop\test\" + fileName + ".xlsx";
             //Sheet1名称
             string sheet1Name = "给排水工程量";
             //第一个单元格
@@ -26,7 +26,7 @@ namespace CalcTest.Command
 
 
             //实例化更新器
-            Updater.PipeParameterUpdater ppu = new Updater.PipeParameterUpdater(commandData.Application.ActiveAddInId);
+            Updater.PipeParameterUpdater ppu = new Updater.PipeParameterUpdater(commandData.Application.ActiveAddInId, fullName, sheet1Name);
             //更新器ID
             UpdaterId updaterId = ppu.GetUpdaterId();
             if (UpdaterRegistry.IsUpdaterRegistered(updaterId))
@@ -38,7 +38,7 @@ namespace CalcTest.Command
                 else
                 {
                     Tool.ExcelTool excelTool = new Tool.ExcelTool();
-                    excelTool.UpdataInOpenWorkBook(commandData.Application.ActiveUIDocument.Document, filePath, sheet1Name, startRow, startCol);
+                    excelTool.UpdataInOpenWorkBook(commandData.Application.ActiveUIDocument.Document, fullName, sheet1Name, startRow, startCol);
 
 
                     UpdaterRegistry.EnableUpdater(updaterId);

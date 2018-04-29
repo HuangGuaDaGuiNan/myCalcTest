@@ -14,45 +14,84 @@ namespace CalcTest.Command
     class PipeCalculation
     {
         static Document _doc;
-        static Pipe _pipe;
-        public PipeCalculation(Document doc,Pipe pipe)
+        static Element _element;
+        public PipeCalculation(Document doc,Element element)
         {
             _doc = doc;
-            _pipe = pipe;
+            _element = element;
         }
         public ArrayList PipeCalcInformation()
         {
             ArrayList information = new ArrayList();
-            //管道系统
-            string plumbingSystemName = _pipe.get_Parameter(BuiltInParameter.RBS_PIPING_SYSTEM_TYPE_PARAM).AsValueString();
-            //管道直径
-            double pipeDn = UnitUtils.ConvertFromInternalUnits(_pipe.get_Parameter(BuiltInParameter.RBS_PIPE_DIAMETER_PARAM).AsDouble(), DisplayUnitType.DUT_MILLIMETERS);
 
-            //获取管道计量信息
-            ////标高
-            //information.Add(_pipe.get_Parameter(BuiltInParameter.RBS_START_LEVEL_PARAM).AsValueString());
-            //区域
-            information.Add(_pipe.ReferenceLevel.get_Parameter(BuiltInParameter.LEVEL_ELEV).AsDouble() < 0 ? "地下" : "地上");
-            //系统
-            information.Add(PlumbingSystemConvert(plumbingSystemName));
-            //项目名称
-            string itemName = _pipe.get_Parameter(BuiltInParameter.RBS_PIPING_SYSTEM_TYPE_PARAM).AsValueString().Replace("P-", "").Replace("M-", "") + "管";
-            information.Add(itemName);
-            //材质
-            string materialName = GetPipeMaterial(plumbingSystemName);
-            information.Add(materialName);
-            //规格
-            information.Add("DN" + _pipe.get_Parameter(BuiltInParameter.RBS_CALCULATED_SIZE).AsString().Split(' ')[0]);
-            //连接方式
-            string connection = GetConnection(GetPipeMaterial(plumbingSystemName), pipeDn);
-            information.Add(connection);
-            //单位
-            information.Add("m");
-            //长度
-            information.Add(UnitUtils.ConvertFromInternalUnits(_pipe.get_Parameter(BuiltInParameter.CURVE_ELEM_LENGTH).AsDouble(), DisplayUnitType.DUT_METERS));
+
+            //按类别提取信息
+            switch ((BuiltInCategory)_element.Category.Id.IntegerValue)
+            {
+                //管道
+                case BuiltInCategory.OST_PipeCurves:
+                    Pipe _pipe = _element as Pipe;
+                    //管道系统
+                    string plumbingSystemName = _pipe.get_Parameter(BuiltInParameter.RBS_PIPING_SYSTEM_TYPE_PARAM).AsValueString();
+                    //管道直径
+                    double pipeDn = UnitUtils.ConvertFromInternalUnits(_pipe.get_Parameter(BuiltInParameter.RBS_PIPE_DIAMETER_PARAM).AsDouble(), DisplayUnitType.DUT_MILLIMETERS);
+                    //获取管道计量信息
+                    ////标高
+                    //information.Add(_pipe.get_Parameter(BuiltInParameter.RBS_START_LEVEL_PARAM).AsValueString());
+                    //区域
+                    information.Add(_pipe.ReferenceLevel.get_Parameter(BuiltInParameter.LEVEL_ELEV).AsDouble() < 0 ? "地下" : "地上");
+                    //系统
+                    information.Add(PlumbingSystemConvert(plumbingSystemName));
+                    //项目名称
+                    string itemName = _pipe.get_Parameter(BuiltInParameter.RBS_PIPING_SYSTEM_TYPE_PARAM).AsValueString().Split('-').Last() + "管";
+                    information.Add(itemName);
+                    //材质
+                    string materialName = GetPipeMaterial(plumbingSystemName);
+                    information.Add(materialName);
+                    //规格
+                    information.Add("DN" + _pipe.get_Parameter(BuiltInParameter.RBS_CALCULATED_SIZE).AsString().Split(' ')[0]);
+                    //连接方式
+                    string connection = GetConnection(GetPipeMaterial(plumbingSystemName), pipeDn);
+                    information.Add(connection);
+                    //单位
+                    information.Add("m");
+                    //长度
+                    information.Add(Math.Round(UnitUtils.ConvertFromInternalUnits(_pipe.get_Parameter(BuiltInParameter.CURVE_ELEM_LENGTH).AsDouble(), DisplayUnitType.DUT_METERS), 3));
+                    break;
+                //管道附件
+                case BuiltInCategory.OST_PipeAccessory:
+                    FamilyInstance _pipeAccessory = _element as FamilyInstance;
+                    //管道系统
+                    string plumbingAccessorySystemName = _pipeAccessory.get_Parameter(BuiltInParameter.RBS_PIPING_SYSTEM_TYPE_PARAM).AsValueString();
+                    //族名称
+                    string pipeAccessoryName = _pipeAccessory.get_Parameter(BuiltInParameter.ELEM_FAMILY_PARAM).AsValueString();
+                    //区域
+                    information.Add(_doc.GetElement(_pipeAccessory.LevelId).get_Parameter(BuiltInParameter.LEVEL_ELEV).AsDouble() < 0 ? "地下" : "地上");
+                    //系统
+                    information.Add(PlumbingSystemConvert(plumbingAccessorySystemName));
+                    //项目名称
+                    information.Add(pipeAccessoryName.Split('-').First());
+                    //材质
+                    information.Add("铸铁");
+                    //规格
+                    information.Add("DN" + _pipeAccessory.get_Parameter(BuiltInParameter.RBS_CALCULATED_SIZE).AsString().Split(' ')[0]);
+                    //连接方式
+                    information.Add(pipeAccessoryName.Split('-').Last());
+                    //单位
+                    information.Add("个");
+                    //工程量
+                    information.Add(1);
+                    break;
+            }
+
+
             //ID
-            information.Add(_pipe.Id.IntegerValue);
+            information.Add(_element.Id.IntegerValue);
+
+
             return information;
+
+
         }
 
         //系统判断
